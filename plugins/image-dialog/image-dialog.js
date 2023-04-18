@@ -46,25 +46,37 @@
                     action += "&callback=" + settings.uploadCallbackURL + "&dialog_id=editormd-image-dialog-" + guid;
                 }
 
+                // add csrf
+//                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+//                var csrfField = "";
+//                if (csrfToken) {
+//                   var csrfParam = $('meta[name="csrf-param"]').attr('content');
+//                   csrfField = "<input type='hidden' name='" + csrfParam + "' value='" + csrfToken + "' />";
+//                }
+//
+                var csrfToken = $('meta[name="_token"]').attr('content');
+                var csrfField = "<input type='hidden' name='csrfmiddlewaretoken' value='" + csrfToken + "' />";
                 var dialogContent = ( (settings.imageUpload) ? "<form action=\"" + action +"\" target=\"" + iframeName + "\" method=\"post\" enctype=\"multipart/form-data\" class=\"" + classPrefix + "form\">" : "<div class=\"" + classPrefix + "form\">" ) +
-                                        ( (settings.imageUpload) ? "<iframe name=\"" + iframeName + "\" id=\"" + iframeName + "\" guid=\"" + guid + "\"></iframe>" : "" ) +
-                                        "<label>" + imageLang.url + "</label>" +
-                                        "<input type=\"text\" data-url />" + (function(){
-                                            return (settings.imageUpload) ? "<div class=\"" + classPrefix + "file-input\">" +
-                                                                                "<input type=\"file\" name=\"" + classPrefix + "image-file\" accept=\"image/*\" />" +
-                                                                                "<input type=\"submit\" value=\"" + imageLang.uploadButton + "\" />" +
-                                                                            "</div>" : "";
-                                        })() +
-                                        "<br/>" +
-                                        "<label>" + imageLang.alt + "</label>" +
-                                        "<input type=\"text\" value=\"" + selection + "\" data-alt />" +
-                                        "<br/>" +
-                                        "<label>" + imageLang.link + "</label>" +
-                                        "<input type=\"text\" value=\"http://\" data-link />" +
-                                        "<br/>" +
-                                    ( (settings.imageUpload) ? "</form>" : "</div>");
+                        ( (settings.imageUpload) ? "<iframe name=\"" + iframeName + "\" id=\"" + iframeName + "\" guid=\"" + guid + "\"></iframe>" : "" ) + csrfField +
+                        "<label>" + imageLang.url + "</label>" +
+                        "<input type=\"text\" data-url />" + (function(){
+                            return (settings.imageUpload) ? "<div class=\"" + classPrefix + "file-input\">" + csrfField +
+                                                                "<input type=\"file\" name=\"" + classPrefix + "image-file\" accept=\"image/*\" />" +
+                                                                csrfField +
+                                                                "<input type=\"submit\" value=\"" + imageLang.uploadButton + "\" />" +
+                                                            "</div>" : "";
+                        })() +
+                        "<br/>" +
+                        "<label>" + imageLang.alt + "</label>" +
+                        "<input type=\"text\" value=\"" + selection + "\" data-alt />" +
+                        "<br/>" +
+                        "<label>" + imageLang.link + "</label>" +
+                        "<input type=\"text\" value=\"http://\" data-link />" +
+                        "<br/>" + csrfField +
+                    ( (settings.imageUpload) ? "</form>" : "</div>");
 
-                //var imageFooterHTML = "<button class=\"" + classPrefix + "btn " + classPrefix + "image-manager-btn\" style=\"float:left;\">" + imageLang.managerButton + "</button>";
+
+                var imageFooterHTML = "<button class=\"" + classPrefix + "btn " + classPrefix + "image-manager-btn\" style=\"float:left;\">" + imageLang.managerButton + "</button>";
 
                 dialog = this.createDialog({
                     title      : imageLang.title,
